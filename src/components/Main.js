@@ -1,5 +1,6 @@
 require('normalize.css/normalize.css');
 require('styles/App.less');
+var unitImage = require('../images/箭头.png');
 var imagesDates = require('../data/imageData.json');
 
 import React from 'react';
@@ -113,7 +114,7 @@ class ControllerUnit extends React.Component {
 		
 		return (
 			<span className={controllerUnitClassName} onClick={this.handleClick.bind(this)}>
-				<img src={"../images/箭头.png"}/>
+				<img src={unitImage}/>
 			</span>
 		);
 	}
