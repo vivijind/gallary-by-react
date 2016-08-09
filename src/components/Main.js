@@ -73,15 +73,16 @@ class ImgFigure extends React.Component {
 
     return (
       	<figure className={imgFigureClassName} style={styleObj}>
-					<img src={this.props.data.imageURL} alt={this.props.data.title} onClick={this.handleClick.bind(this)}/>
-					<figcaption>
+      		<figcaption>
 						<h2 className="img-title">{this.props.data.title}</h2>
 						<div className="img-back" onClick={this.handleClick.bind(this)}>
 							<p>
+								<div className="tag">{this.props.data.tag}</div>
 								{this.props.data.desc}
 							</p>
 						</div>
 					</figcaption>
+					<img src={this.props.data.imageURL} alt={this.props.data.title} onClick={this.handleClick.bind(this)}/>
 				</figure>
     );
   }
@@ -111,10 +112,28 @@ class ControllerUnit extends React.Component {
 				controllerUnitClassName += ' is-inverse';
 			}
 		}
+
+		var styleObj = {};
+		var tag = this.props.data.tag;
+  	switch(tag) {
+  		case "TEAM": 
+  			styleObj.border = "2px solid #d9d9d9";
+  			break;
+  		case "IOS工程师":
+  			styleObj.border = "2px solid #9d19fd";
+  			break;
+  		case "Andriod工程师":
+  			styleObj.border = "2px solid #333";
+  			break;
+  		case "前端工程师":
+  			styleObj.border = "2px solid #1dcc91";
+  			break;
+  	}
 		
 		return (
-			<span className={controllerUnitClassName} onClick={this.handleClick.bind(this)}>
+			<span className={controllerUnitClassName} style={styleObj} onClick={this.handleClick.bind(this)}>
 				<img src={unitImage}/>
+				<div>{this.props.data.title}</div>
 			</span>
 		);
 	}
@@ -126,7 +145,8 @@ class AppComponent extends React.Component {
     this.Constant = {
 			centerPos: {	// 中心点
 				left: 0,
-				right: 0
+				right: 0,
+				top: 0
 			},
 			hPosRange: { // 水平方向的取值范围
 				leftSecX: [0,0],
@@ -147,7 +167,7 @@ class AppComponent extends React.Component {
     			// },
     			// rotate: 0,	// 旋转角度
     			// isInverse: false, 	// 图片正反面
-    			// isCenter: false		// 图片是否居中
+    			// isCenter: false,		// 图片是否居中
     		}
     	]
     };
@@ -188,7 +208,7 @@ class AppComponent extends React.Component {
 
 				// 存储在上层区域的图片信息
 				imgsArrangeTopArr = [],
-				topImgNum = Math.floor(Math.random()*2), // 取一个或者不取
+				topImgNum = Math.floor(Math.random()*1), // 上侧不取图片
 				topImgSpliceIndex = 0,
 
 				// 存储居中图片的状态信息
@@ -280,7 +300,7 @@ class AppComponent extends React.Component {
 		// 计算中心图片的位置点
 		this.Constant.centerPos = {
 			left: halfStageW - halfImgW,
-			top: halfStageH - halfImgH
+			top: halfImgH - 10
 		}
 
 		// 计算左侧、右侧区域的xy取值范围
@@ -296,8 +316,8 @@ class AppComponent extends React.Component {
 		this.Constant.vPosRange.x[0] = halfStageW - imgW;
 		this.Constant.vPosRange.x[1] = halfStageW;
 
-		// 指定第一张图片居中
-		this.rearrange(0);
+		// 指定团队图片居中
+		this.rearrange(4);
 	}
   render() {
 		var controllerUnits = [],
@@ -317,7 +337,7 @@ class AppComponent extends React.Component {
 			}
 			ImgFigures.push(<ImgFigure key={'img'+index} data={value} ref={'imgFigure' + index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}/>);
 			
-			controllerUnits.push(<ControllerUnit key={index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}/>);
+			controllerUnits.push(<ControllerUnit key={index} data={value} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}/>);
 		}.bind(this));
 
     return (
